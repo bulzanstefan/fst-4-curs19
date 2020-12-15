@@ -1,5 +1,6 @@
 package ro.fasttrackit.curs19.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ro.fasttrackit.curs19.model.Country;
 
@@ -14,11 +15,16 @@ import static java.util.stream.Collectors.toList;
 
 @Service
 public class CountryReader {
+    private final String filename;
     private int nextId = 1;
+
+    public CountryReader(@Value("${my.filename}") String config) {
+        this.filename = config;
+    }
 
     public List<Country> fetchCountries() {
         try {
-            return new BufferedReader(new FileReader("countries.txt"))
+            return new BufferedReader(new FileReader(filename))
                     .lines()
                     .map(this::parseCountry)
                     .collect(toList());
